@@ -34,8 +34,8 @@
     </div>
 
     <div class="control">
-        <label for="gear">Gear:</label>
-        <select id="gear">
+        <label for="shift">Shift Position:</label>
+        <select id="shift">
             <option value="P">P</option>
             <option value="R">R</option>
             <option value="N">N</option>
@@ -79,9 +79,9 @@
             socket.emit('update_battery', {battery: parseInt(battery)});
         });
 
-        $('#gear').on('change', function() {
-            const gear = $(this).val();
-            socket.emit('update_gear', {gear: gear});
+        $('#shift').on('change', function() {
+            const shift = $(this).val();
+            socket.emit('update_shift', {shift: shift});
         });
 
         $('#seatbelt').on('change', function() {
@@ -110,8 +110,8 @@
             updateValue('battery', `${data.battery}%`);
         });
 
-        socket.on('gear_updated', function(data) {
-            $('#gear').val(data.gear);
+        socket.on('shift_updated', function(data) {
+            $('#shift').val(data.shift);
         });
 
         socket.on('seatbelt_updated', function(data) {

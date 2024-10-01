@@ -37,13 +37,11 @@ def create_app(controller: ICController) -> Flask:
         can_bus.send(message)
         emit('battery_updated', {'battery': battery}, broadcast=True)
 
-    @socketio.on('update_gear')
-    def handle_gear(data):
-        gear = data['gear']
-        # Send gear update via CAN bus
-        message = can.Message(arbitration_id=0x126, data=[ord(gear)])
-        can_bus.send(message)
-        emit('gear_updated', {'gear': gear}, broadcast=True)
+    @socketio.on('update_shift')
+    def handle_shift(data):
+        shift = data['shift']
+        controller.update_shift(shift)
+        emit('shift_updated', {'shift': shift}, broadcast=True)
 
     @socketio.on('update_seatbelt')
     def handle_seatbelt(data):
