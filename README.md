@@ -2,6 +2,8 @@
 
 A controller of the Instrument Cluster (speedmeter) of the NHP10 (Toyota AQUA 2013).
 
+[!['Demo movie']('https://github.com/user-attachments/assets/fd8b981c-e0e4-490e-b127-c790602d72b8')]('https://youtu.be/FkTJo1CsYN8')
+
 ## Get Started
 
 Connect the IC to your Linux box using SocketCAN (e.g. `can0`).
