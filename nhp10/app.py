@@ -3,9 +3,11 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from typing import Any
 
+from nhp10.ic_controller import ICController
+
 socketio = SocketIO()
 
-def create_app(can_bus: Any) -> Flask:
+def create_app(controller: ICController) -> Flask:
     app = Flask(__name__)
     socketio.init_app(app)
 
@@ -16,9 +18,7 @@ def create_app(can_bus: Any) -> Flask:
     @socketio.on('update_speed')
     def handle_speed(data):
         speed = data['speed']
-        # Send speed update via CAN bus
-        message = can.Message(arbitration_id=0x123, data=[speed])
-        can_bus.send(message)
+        controller.update_speed(speed)
         emit('speed_updated', {'speed': speed}, broadcast=True)
 
     @socketio.on('update_odo')
