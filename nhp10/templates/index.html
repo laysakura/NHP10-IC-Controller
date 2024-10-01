@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>トヨタアクア 2013 CAN Bus コントロール</title>
+    <title>TOYOTA AQUA 2013 Instrument Cluster Controller</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -13,10 +13,10 @@
     </style>
 </head>
 <body>
-    <h1>トヨタアクア 2013 CAN Bus コントロール</h1>
+    <h1>TOYOTA AQUA 2013 Instrument Cluster Controller</h1>
     
     <div class="control">
-        <label for="speed">速度:</label>
+        <label for="speed">Speed:</label>
         <input type="range" id="speed" min="0" max="180" value="0">
         <span id="speed-value">0 km/h</span>
     </div>
@@ -28,13 +28,13 @@
     </div>
 
     <div class="control">
-        <label for="battery">バッテリー:</label>
+        <label for="battery">Battery:</label>
         <input type="range" id="battery" min="0" max="100" value="0">
         <span id="battery-value">0%</span>
     </div>
 
     <div class="control">
-        <label for="gear">ギア:</label>
+        <label for="gear">Gear:</label>
         <select id="gear">
             <option value="P">P</option>
             <option value="R">R</option>
@@ -45,12 +45,12 @@
     </div>
 
     <div class="control">
-        <label for="seatbelt">シートベルト警告:</label>
+        <label for="seatbelt">Seatbelt Warn:</label>
         <input type="checkbox" id="seatbelt">
     </div>
 
     <div class="control">
-        <label for="turn-signal">ウィンカー:</label>
+        <label for="turn-signal">Winker:</label>
         <input type="checkbox" id="turn-signal">
     </div>
 
