@@ -22,18 +22,6 @@
     </div>
 
     <div class="control">
-        <label for="odo">ODO:</label>
-        <input type="range" id="odo" min="0" max="999999" value="0">
-        <span id="odo-value">0 km</span>
-    </div>
-
-    <div class="control">
-        <label for="battery">Battery:</label>
-        <input type="range" id="battery" min="0" max="100" value="0">
-        <span id="battery-value">0%</span>
-    </div>
-
-    <div class="control">
         <label for="shift">Shift Position:</label>
         <select id="shift">
             <option value="P">P</option>
@@ -45,13 +33,8 @@
     </div>
 
     <div class="control">
-        <label for="seatbelt">Seatbelt Warn:</label>
-        <input type="checkbox" id="seatbelt">
-    </div>
-
-    <div class="control">
-        <label for="turn-signal">Winker:</label>
-        <input type="checkbox" id="turn-signal">
+        <label for="ev_mode">EV Mode:</label>
+        <input type="checkbox" id="ev_mode">
     </div>
 
     <script>
@@ -67,31 +50,14 @@
             socket.emit('update_speed', {speed: parseInt(speed)});
         });
 
-        $('#odo').on('input', function() {
-            const odo = $(this).val();
-            updateValue('odo', `${odo} km`);
-            socket.emit('update_odo', {odo: parseInt(odo)});
-        });
-
-        $('#battery').on('input', function() {
-            const battery = $(this).val();
-            updateValue('battery', `${battery}%`);
-            socket.emit('update_battery', {battery: parseInt(battery)});
-        });
-
         $('#shift').on('change', function() {
             const shift = $(this).val();
             socket.emit('update_shift', {shift: shift});
         });
 
-        $('#seatbelt').on('change', function() {
-            const seatbelt = $(this).is(':checked');
-            socket.emit('update_seatbelt', {seatbelt: seatbelt});
-        });
-
-        $('#turn-signal').on('change', function() {
-            const turnSignal = $(this).is(':checked');
-            socket.emit('update_turn_signal', {turn_signal: turnSignal});
+        $('#ev_mode').on('change', function() {
+            const ev_mode = $(this).is(':checked');
+            socket.emit('update_ev_mode', {ev_mode: ev_mode});
         });
 
         // WebSocket events for real-time updates
@@ -100,26 +66,12 @@
             updateValue('speed', `${data.speed} km/h`);
         });
 
-        socket.on('odo_updated', function(data) {
-            $('#odo').val(data.odo);
-            updateValue('odo', `${data.odo} km`);
-        });
-
-        socket.on('battery_updated', function(data) {
-            $('#battery').val(data.battery);
-            updateValue('battery', `${data.battery}%`);
-        });
-
         socket.on('shift_updated', function(data) {
             $('#shift').val(data.shift);
         });
 
-        socket.on('seatbelt_updated', function(data) {
-            $('#seatbelt').prop('checked', data.seatbelt);
-        });
-
-        socket.on('turn_signal_updated', function(data) {
-            $('#turn-signal').prop('checked', data.turn_signal);
+        socket.on('ev_mode_updated', function(data) {
+            $('#ev_mode').prop('checked', data.ev_mode);
         });
     </script>
 </body>

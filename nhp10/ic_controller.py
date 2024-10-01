@@ -69,6 +69,25 @@ class ICController:
             lambda: can.Message(arbitration_id=0x3BC, data=data, is_extended_id=False),
         )
 
+    def update_ev(self, ev_mode: bool):
+        """EV mode (ON, OFF)
+
+        CAN ID: 0x1C4
+
+        How to update (ON): Periodically (1/ 3 sec) send any message to the CAN bus.
+        """
+        if ev_mode:
+            data = [0, 0, 0, 0, 0, 0, 0, 0]
+            self.board.register(
+                "ev_mode",
+                3.0,
+                lambda: can.Message(
+                    arbitration_id=0x1C4, data=data, is_extended_id=False
+                ),
+            )
+        else:
+            self.board.unregister("ev_mode")
+
     def _send_msg_periodically(self):
         while self.running:
             current_time = time.time()
@@ -119,3 +138,6 @@ class PeriodicMessageBoard:
         self._periodic_messages[msg_id] = PeriodicMessage(
             msg_id, interval_sec, msg_generator
         )
+
+    def unregister(self, msg_id: str):
+        self._periodic_messages.pop(msg_id, None)

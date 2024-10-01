@@ -7,56 +7,31 @@ from nhp10.ic_controller import ICController
 
 socketio = SocketIO()
 
+
 def create_app(controller: ICController) -> Flask:
     app = Flask(__name__)
     socketio.init_app(app)
 
-    @app.route('/')
+    @app.route("/")
     def index():
-        return render_template('index.html')
+        return render_template("index.html")
 
-    @socketio.on('update_speed')
+    @socketio.on("update_speed")
     def handle_speed(data):
-        speed = data['speed']
+        speed = data["speed"]
         controller.update_speed(speed)
-        emit('speed_updated', {'speed': speed}, broadcast=True)
+        emit("speed_updated", {"speed": speed}, broadcast=True)
 
-    @socketio.on('update_odo')
-    def handle_odo(data):
-        odo = data['odo']
-        # Send ODO update via CAN bus
-        message = can.Message(arbitration_id=0x124, data=[odo])
-        can_bus.send(message)
-        emit('odo_updated', {'odo': odo}, broadcast=True)
-
-    @socketio.on('update_battery')
-    def handle_battery(data):
-        battery = data['battery']
-        # Send battery update via CAN bus
-        message = can.Message(arbitration_id=0x125, data=[battery])
-        can_bus.send(message)
-        emit('battery_updated', {'battery': battery}, broadcast=True)
-
-    @socketio.on('update_shift')
+    @socketio.on("update_shift")
     def handle_shift(data):
-        shift = data['shift']
+        shift = data["shift"]
         controller.update_shift(shift)
-        emit('shift_updated', {'shift': shift}, broadcast=True)
+        emit("shift_updated", {"shift": shift}, broadcast=True)
 
-    @socketio.on('update_seatbelt')
-    def handle_seatbelt(data):
-        seatbelt = data['seatbelt']
-        # Send seatbelt status update via CAN bus
-        message = can.Message(arbitration_id=0x127, data=[int(seatbelt)])
-        can_bus.send(message)
-        emit('seatbelt_updated', {'seatbelt': seatbelt}, broadcast=True)
-
-    @socketio.on('update_turn_signal')
-    def handle_turn_signal(data):
-        turn_signal = data['turn_signal']
-        # Send turn signal status update via CAN bus
-        message = can.Message(arbitration_id=0x128, data=[int(turn_signal)])
-        can_bus.send(message)
-        emit('turn_signal_updated', {'turn_signal': turn_signal}, broadcast=True)
+    @socketio.on("update_ev_mode")
+    def handle_ev_mode(data):
+        ev_mode = data["ev_mode"]
+        controller.update_ev(ev_mode)
+        emit("ev_updated", {"ev_mode": ev_mode}, broadcast=True)
 
     return app
