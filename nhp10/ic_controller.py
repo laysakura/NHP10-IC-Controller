@@ -28,8 +28,8 @@ class ICController:
         """
         speed = min(max(speed, 0), 180)
 
-        data5 = speed * 0x421F // 180 // 0xFF
-        data6 = speed * 0x421F // 180 % 0xFF
+        data5 = speed * 0x421F // 180 // 256
+        data6 = speed * 0x421F // 180 % 256
         data = [0, 0, 0, 0, 0, data5, data6, 0]
 
         self.board.register(
