@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トヨタアクア 2013 CAN Bus コントロール</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .control { margin-bottom: 20px; }
+        label { display: inline-block; width: 100px; }
+    </style>
+</head>
+<body>
+    <h1>トヨタアクア 2013 CAN Bus コントロール</h1>
+    
+    <div class="control">
+        <label for="speed">速度:</label>
+        <input type="range" id="speed" min="0" max="180" value="0">
+        <span id="speed-value">0 km/h</span>
+    </div>
+
+    <div class="control">
+        <label for="odo">ODO:</label>
+        <input type="range" id="odo" min="0" max="999999" value="0">
+        <span id="odo-value">0 km</span>
+    </div>
+
+    <div class="control">
+        <label for="battery">バッテリー:</label>
+        <input type="range" id="battery" min="0" max="100" value="0">
+        <span id="battery-value">0%</span>
+    </div>
+
+    <div class="control">
+        <label for="gear">ギア:</label>
+        <select id="gear">
+            <option value="P">P</option>
+            <option value="R">R</option>
+            <option value="N">N</option>
+            <option value="D">D</option>
+            <option value="B">B</option>
+        </select>
+    </div>
+
+    <div class="control">
+        <label for="seatbelt">シートベルト警告:</label>
+        <input type="checkbox" id="seatbelt">
+    </div>
+
+    <div class="control">
+        <label for="turn-signal">ウィンカー:</label>
+        <input type="checkbox" id="turn-signal">
+    </div>
+
+    <script>
+        const socket = io();
+
+        function updateValue(id, value) {
+            $(`#${id}-value`).text(value);
+        }
+
+        $('#speed').on('input', function() {
+            const speed = $(this).val();
+            updateValue('speed', `${speed} km/h`);
+            socket.emit('update_speed', {speed: parseInt(speed)});
+        });
+
+        $('#odo').on('input', function() {
+            const odo = $(this).val();
+            updateValue('odo', `${odo} km`);
+            socket.emit('update_odo', {odo: parseInt(odo)});
+        });
+
+        $('#battery').on('input', function() {
+            const battery = $(this).val();
+            updateValue('battery', `${battery}%`);
+            socket.emit('update_battery', {battery: parseInt(battery)});
+        });
+
+        $('#gear').on('change', function() {
+            const gear = $(this).val();
+            socket.emit('update_gear', {gear: gear});
+        });
+
+        $('#seatbelt').on('change', function() {
+            const seatbelt = $(this).is(':checked');
+            socket.emit('update_seatbelt', {seatbelt: seatbelt});
+        });
+
+        $('#turn-signal').on('change', function() {
+            const turnSignal = $(this).is(':checked');
+            socket.emit('update_turn_signal', {turn_signal: turnSignal});
+        });
+
+        // WebSocket events for real-time updates
+        socket.on('speed_updated', function(data) {
+            $('#speed').val(data.speed);
+            updateValue('speed', `${data.speed} km/h`);
+        });
+
+        socket.on('odo_updated', function(data) {
+            $('#odo').val(data.odo);
+            updateValue('odo', `${data.odo} km`);
+        });
+
+        socket.on('battery_updated', function(data) {
+            $('#battery').val(data.battery);
+            updateValue('battery', `${data.battery}%`);
+        });
+
+        socket.on('gear_updated', function(data) {
+            $('#gear').val(data.gear);
+        });
+
+        socket.on('seatbelt_updated', function(data) {
+            $('#seatbelt').prop('checked', data.seatbelt);
+        });
+
+        socket.on('turn_signal_updated', function(data) {
+            $('#turn-signal').prop('checked', data.turn_signal);
+        });
+    </script>
+</body>
+</html>
